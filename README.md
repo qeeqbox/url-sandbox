@@ -21,7 +21,7 @@ URL Sandbox automate the daily task of analyzing URL or Domains internally witho
 <li>Target screenshot</li>
 <li>Network graph image</li>
 <li>Internal sniffer</li>
-<li>DNS and Proxy options</li>
+<li>Custom DNS and Proxy options</li>
 <li>Auto Tor configuration</li>
 <li>HTML and JSON output</li>
 <li>No-redirect option</li>
