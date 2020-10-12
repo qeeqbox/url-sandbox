@@ -1,0 +1,4 @@
+SocksPort 0.0.0.0:9050
+TransPort 0.0.0.0:9040
+DNSPort 0.0.0.0:53
+AvoidDiskWrites 1

@@ -1,0 +1,3 @@
+FROM mongo:3.4.8
+RUN echo "America/Los_Angeles" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata

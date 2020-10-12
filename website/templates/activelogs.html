@@ -1,0 +1,16 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="col">
+   <div class="card new_card">
+      <div class="card-header">
+         <div class="div-left">Active logs < 3 mins</div>
+         <div class="div-right"></div>
+      </div>
+      <div class="card-body width100">
+         <textarea readonly class="activelogs" id='log' rows=25 autofocus></textarea>
+      </div>
+   </div>
+</div>
+{% endblock body %}
+

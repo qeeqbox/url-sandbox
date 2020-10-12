@@ -1,0 +1,110 @@
+version: '2.1'
+services:
+  website:
+    build:
+      context: .
+      dockerfile: ./webinterface-Dockerfile
+    command: bash -c "/usr/local/bin/gunicorn --chdir website --worker-class=gevent --worker-connections=1000 --workers=1 -b :8000 web:APP"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - project_env=docker
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - ./shared:/website/shared
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      disable: true 
+    logging:
+      driver: none
+
+  workers_api:
+    build:
+      context: .
+      dockerfile: ./backend-Dockerfile
+    command: celery -A worker worker --concurrency=1 -l WARNING -Q analyze_url_queue
+    restart: always
+    privileged: true
+    environment:
+      - project_env=docker
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - /tmp/urlsandbox/logs:/tmp/urlsandbox/logs/
+      - /tmp/urlsandbox/output:/tmp/urlsandbox/output/
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./shared:/backend/shared
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/root/.docker/config.json
+  
+  proxy:
+    build:
+      context: .
+      dockerfile: ./proxy-Dockerfile
+    privileged: true
+    networks:
+      - frontend_box
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  box:
+    build:
+      context: .
+      dockerfile: ./box-Dockerfile
+    networks:
+      - frontend_box
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      driver: none
+
+  redis:
+    image: redis
+    command: redis-server --requirepass changeme_927dhgs810d712fxs1
+    networks:
+      - backend
+      - frontend
+    ports:
+     - "6379:6379"
+    logging:
+      driver: none
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: ./mongodb-Dockerfile
+    ports:
+      - '27017:27017'
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: changeme_9620eh26sfvka017fx
+      MONGO_INITDB_ROOT_PASSWORD: changeme_0cx821ncf7qg17ahx3
+    command: mongod --auth
+    logging:
+      driver: none
+
+networks:
+  frontend:
+    internal: false
+  backend:
+    internal: true
+  frontend_box:
+    internal: false

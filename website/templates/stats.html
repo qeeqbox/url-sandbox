@@ -1,0 +1,19 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="stats-row no-padding">
+   {% for key,value in stats.items() %}
+   <div class="col-lg-4">
+      <div class="card new_card">
+         <div class="card-header">
+            <div class="div-left">{{ key }}</div>
+            <div class="div-right"></div>
+         </div>
+         <div class="card-body">
+            {{ value }}
+         </div>
+      </div>
+   </div>
+   {% endfor %}
+</div>
+{% endblock body %}

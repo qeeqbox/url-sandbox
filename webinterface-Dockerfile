@@ -1,0 +1,5 @@
+FROM python:latest
+ENV DEBIAN_FRONTEND noninteractive
+COPY webinterface-requirements.txt .
+RUN pip3 install -r webinterface-requirements.txt
+ADD ./website ./website

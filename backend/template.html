@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <title>{{ title }}</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <style type="text/css">
+         body {
+         padding: 10px 10px 10px 10px;
+         font-family: Arial;
+         font-size: 10px;
+         background-color: #212222;
+         color: #b4b4b4 !important;
+         }
+         .tablewrapper, .tablewrapper table{
+         width: 100%
+         }
+         .tablewrapper thead {
+         background-color: #383939;
+         }
+         .tablewrapper img {
+         width: 100%;
+         width: 100%;
+         max-width: 800px;
+         }
+         .tablewrapper{
+         padding-bottom: 10px;
+         }
+         pre
+         {
+         white-space: -moz-pre-wrap; 
+         white-space: pre-wrap; 
+         white-space: -pre-wrap; 
+         white-space: -o-pre-wrap; 
+         word-wrap: break-word; 
+         margin: 2px 2px 2px 2px !important;
+         background-color: transparent !important;
+         -webkit-border-radius: 2px !important;
+         border-radius: 2px !important;
+         border: none;
+         resize: none;
+         padding: 2px 5px 2px 5px;
+         color: #b4b4b4 !important;
+         }
+      </style>
+   </head>
+   <body>
+    {{ content }}
+   </body>
+   <script type="text/javascript">
+      function toggle_class(class_name) {
+      $(class_name).toggle();
+      }
+   </script>
+</html>
+

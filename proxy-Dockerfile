@@ -1,0 +1,6 @@
+FROM alpine:latest
+RUN apk update && apk upgrade && apk add tor curl
+COPY /proxy/torrc /etc/tor/torrc
+EXPOSE 9050/tcp
+EXPOSE 53/udp
+CMD ["sh","-c","echo nameserver 127.0.0.1 > /etc/resolv.conf && /usr/bin/tor -f /etc/tor/torrc"]

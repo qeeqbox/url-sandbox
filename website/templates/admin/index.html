@@ -1,0 +1,39 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+{% if current_user.is_authenticated %}
+<div class="col">
+   <div class="card new_card">
+      <div class="card-header">
+         <div class="div-left">{{ filename }}</div>
+         <div class="div-right"></div>
+      </div>
+      <div class="card-body width100">
+         {{ intro|markdown }}
+      </div>
+   </div>
+</div>
+{% else %}
+<div class="col-lg-4 col-center vertical-center">
+   <div class="card new_card">
+      <div class="card-header">
+         <div class="div-left">{{ active }} form</div>
+         <div class="div-right"></div>
+      </div>
+      <div class="card-body width100">
+         <form method="POST">
+            <div class="form-group">
+               {% for f in form if f.type != 'CSRFTokenField' %}
+               {{ f }}
+               {% endfor %}
+               <button class="btn" type="submit">{{ active }}</button>
+               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+               {{ link | safe }}
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{% endif %}
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+{% endblock body %}

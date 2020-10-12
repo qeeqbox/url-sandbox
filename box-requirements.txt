@@ -1,0 +1,17 @@
+selenium
+pyvirtualdisplay
+netifaces
+scapy
+tesseract
+tesseract-ocr
+pytesseract
+tinydb
+beautifulsoup4
+requests==2.22.0
+urllib3==1.25.8
+pyOpenSSL
+requests[socks]
+pysocks
+networkx
+matplotlib
+dnspython

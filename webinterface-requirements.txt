@@ -1,0 +1,17 @@
+requests
+flask
+werkzeug
+gunicorn
+flask_mongoengine
+flask_admin
+flask_login
+flask_bcrypt
+pyOpenSSL
+Flask-Markdown
+psutil
+gevent
+python-dateutil
+redis
+celery
+beautifulsoup4
+validator_collection

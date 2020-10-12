@@ -1,0 +1,6 @@
+FROM python:latest
+ENV DEBIAN_FRONTEND noninteractive
+COPY backend-requirements.txt .
+RUN pip install -r backend-requirements.txt
+ADD ./backend ./backend
+WORKDIR backend
