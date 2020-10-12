@@ -1,7 +1,7 @@
 <p align="center"> <img src="https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/readme/url-sandbox.png"></p>
 
 #
-[[![Generic badge](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/info&label=version&query=$.version&colorB=blue&style=flat-square)](https://github.com/qeeqbox/url-sandbox/blob/master/changes.md)  [![Generic badge](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/info&label=build&query=$.dockercomposebuild&colorB=green&style=flat-square)](https://github.com/qeeqbox/url-sandbox/blob/master/changes.md) [![Generic badge](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/info&label=test&query=$.automatedtest&colorB=green&style=flat-square)](https://github.com/qeeqbox/url-sandbox/blob/master/changes.md) [![Generic badge](https://img.shields.io/static/v1?label=%F0%9F%91%8D&message=!&color=yellow&style=flat-square)](https://github.com/qeeqbox/url-sandbox/stargazers)
+[![Generic badge](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/info&label=version&query=$.version&colorB=blue&style=flat-square)](https://github.com/qeeqbox/url-sandbox/blob/master/changes.md)  [![Generic badge](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/info&label=build&query=$.dockercomposebuild&colorB=green&style=flat-square)](https://github.com/qeeqbox/url-sandbox/blob/master/changes.md) [![Generic badge](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/qeeqbox/url-sandbox/master/info&label=test&query=$.automatedtest&colorB=green&style=flat-square)](https://github.com/qeeqbox/url-sandbox/blob/master/changes.md) [![Generic badge](https://img.shields.io/static/v1?label=%F0%9F%91%8D&message=!&color=yellow&style=flat-square)](https://github.com/qeeqbox/url-sandbox/stargazers)
 
 URL Sandbox automate the daily task of analyzing URL or Domains internally without external resources' interaction. It contains a sandbox module that executes the target in an isolated environment (Can be adjusted based on your needs). The output from that environment is parsed and structured into useful categories. Some of those categories are visualized for better user experience. This project can be scaled up and integrated into your SOC.
 
@@ -21,6 +21,8 @@ URL Sandbox automate the daily task of analyzing URL or Domains internally witho
 <li>Target screenshot</li>
 <li>Network graph image</li>
 <li>Internal sniffer</li>
+<li>DNS and Proxy options</li>
+<li>Auto Tor configuration</li>
 <li>HTML and JSON output</li>
 <li>No-redirect option</li>
 <li>Task Queue</li>
