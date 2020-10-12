@@ -26,7 +26,6 @@ URL Sandbox automate the daily task of analyzing URL or Domains internally witho
 <li>Auto Tor configuration</li>
 <li>HTML and JSON output</li>
 <li>No-redirect option</li>
-<li>Task Queue</li>
 </ul>
 
 ## Running
