@@ -2,8 +2,6 @@ selenium
 pyvirtualdisplay
 netifaces
 scapy
-tesseract
-tesseract-ocr
 pytesseract
 tinydb
 beautifulsoup4
