@@ -33,7 +33,7 @@ CELERY.conf.update(
 
 def clean_up():
     for container in DOCKER_CLIENT.containers.list():
-        if "urlsandbox_box" in container.name:
+        if "url-sandbox_box" in container.name:
             container.stop()
 
 @CELERY.task(bind=True, name=json_settings[environ["project_env"]]["worker"]["name"], queue=json_settings[environ["project_env"]]["worker"]["queue"], soft_time_limit=json_settings[environ["project_env"]]["worker"]["task_time_limit"], time_limit=json_settings[environ["project_env"]]["worker"]["task_time_limit"]+10, max_retries=0, default_retry_delay=5)
@@ -52,10 +52,10 @@ def analyze_url(self,parsed):
         parsed['locations'] = json_settings[environ["project_env"]]["task_logs"]
         if parsed['use_proxy']:
             log_string("Proxy detected",task=parsed['task'])
-            temp_container = DOCKER_CLIENT.containers.run("urlsandbox_box", command=[hexlify(pdumps(parsed)).decode()] , volumes={json_settings[environ["project_env"]]["output_folder"]: {'bind': json_settings[environ["project_env"]]["task_logs"]["box_output"], 'mode': 'rw'}}, detach=True, network="urlsandbox_frontend_box")
+            temp_container = DOCKER_CLIENT.containers.run("url-sandbox_box", command=[hexlify(pdumps(parsed)).decode()] , volumes={json_settings[environ["project_env"]]["output_folder"]: {'bind': json_settings[environ["project_env"]]["task_logs"]["box_output"], 'mode': 'rw'}}, detach=True, network="url-sandbox_frontend_box")
         else:
             log_string("No proxy, running privileged for custom tor config",task=parsed['task'])
-            temp_container = DOCKER_CLIENT.containers.run("urlsandbox_box", command=[hexlify(pdumps(parsed)).decode()] , volumes={json_settings[environ["project_env"]]["output_folder"]: {'bind': json_settings[environ["project_env"]]["task_logs"]["box_output"], 'mode': 'rw'}}, detach=True, network="urlsandbox_frontend_box", privileged=True)
+            temp_container = DOCKER_CLIENT.containers.run("url-sandbox_box", command=[hexlify(pdumps(parsed)).decode()] , volumes={json_settings[environ["project_env"]]["output_folder"]: {'bind': json_settings[environ["project_env"]]["task_logs"]["box_output"], 'mode': 'rw'}}, detach=True, network="url-sandbox_frontend_box", privileged=True)
         temp_logs = ""
         for item in range(1,parsed['analyzer_timeout']):
             temp_logs = temp_container.logs()
