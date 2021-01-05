@@ -38,11 +38,10 @@ chmod +x run.sh <br>
 The project interface http://127.0.0.1:8000/ will open automatically after finishing the initialization process
 
 ## Resources
-ChromeDriver - WebDriver for Chrome, Docker SDK
+`ChromeDriver - WebDriver for Chrome, Docker SDK`
 
 ## Other Licenses
-By using this framework, you are accepting the license terms of each package listed below:
-chromedriver, dnspython, docker, docker-compose, firefox-esr, flask, flask_admin, flask_bcrypt, flask_login, Flask-Markdown, flask_mongoengine, geckodriver, gevent, gunicorn, iptables, iptables-persistent, jinja2, jq, libleptonica-dev, libtesseract-dev, matplotlib, netifaces, net-tools, networkx, phantomjs, pymongo, pysocks, pytesseract, python-dateutil, python-magic, pyvirtualdisplay, requests[socks], scapy, selenium, supervisor, tcpdump, termcolor, tesseract, tldextract, unzip, urllib3, validator_collection, werkzeug, wget, xvfb, useragentstring
+By using this framework, you are accepting the license terms of each the following packages :`chromedriver, dnspython, docker, docker-compose, firefox-esr, flask, flask_admin, flask_bcrypt, flask_login, Flask-Markdown, flask_mongoengine, geckodriver, gevent, gunicorn, iptables, iptables-persistent, jinja2, jq, libleptonica-dev, libtesseract-dev, matplotlib, netifaces, net-tools, networkx, phantomjs, pymongo, pysocks, pytesseract, python-dateutil, python-magic, pyvirtualdisplay, requests[socks], scapy, selenium, supervisor, tcpdump, termcolor, tesseract, tldextract, unzip, urllib3, validator_collection, werkzeug, wget, xvfb, useragentstring`
 
 ## Disclaimer\Notes
 - Do not deploy without proper configuration
