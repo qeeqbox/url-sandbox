@@ -73,6 +73,7 @@ services:
 
   redis:
     image: redis
+    container_name: url-sandbox_redis
     command: redis-server --requirepass changeme_927dhgs810d712fxs1
     networks:
       - backend

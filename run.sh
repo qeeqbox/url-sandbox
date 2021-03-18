@@ -11,12 +11,9 @@ setup_requirements () {
 }
 
 wait_on_web_interface () {
-echo ''
 until $(curl --silent --head --fail http://127.0.0.1:8000 --output /dev/null); do
-echo -ne "\n\n[\033[47m\033[0;31mInitializing project in progress..\033[0m]\n\n"
 sleep 5
 done
-echo ''
 xdg-open http://127.0.0.1:8000/url/
 }
 
@@ -29,7 +26,10 @@ dev_project () {
 }
 
 stop_containers () {
-	sudo docker stop $(sudo docker ps -aq)
+	docker-compose -f docker-compose-test.yml down -v 2>/dev/null
+	docker-compose -f docker-compose-dev.yml down -v 2>/dev/null
+	docker stop $(docker ps | grep url-sandbox_ | awk '{print $1}') 2>/dev/null
+	docker kill $(docker ps | grep url-sandbox_ | awk '{print $1}') 2>/dev/null
 } 
 
 deploy_aws_project () {
@@ -37,25 +37,39 @@ deploy_aws_project () {
 }
 
 auto_configure_test () {
+	stop_containers
+	wait_on_web_interface & 
 	setup_requirements
 	test_project
+	stop_containers 
+	kill %% 2>/dev/null
 }
 
 auto_configure () {
+	stop_containers
+	wait_on_web_interface & 
 	setup_requirements
 	dev_project
+	stop_containers 
+	kill %% 2>/dev/null
 }
 
 if [[ "$1" == "auto_test" ]]; then
-	stop_containers
-	wait_on_web_interface & 
 	auto_configure_test
-	stop_containers 
 fi
 
 if [[ "$1" == "auto_configure" ]]; then
-	stop_containers
-	wait_on_web_interface & 
 	auto_configure
-	stop_containers 
 fi
+
+kill %% 2>/dev/null
+
+while read -p "`echo -e '\nChoose an option:\n1) Setup requirements (docker, docker-compose)\n2) Test the project (All servers and Sniffer)\n8) Run auto configuration\n9) Run auto test\n>> '`"; do
+  case $REPLY in
+    "1") setup_requirements;;
+    "2") test_project;;
+    "8") auto_configure;;
+    "9") auto_configure_test;;
+    *) echo "Invalid option";;
+  esac
+done

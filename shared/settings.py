@@ -15,10 +15,10 @@ json_settings = {
     "backend_key": "w9AMMSqmKo4gFfE3s!Ghy4cRbE]xiynWKJhoUN(!1IfsOpJ0Z1KypX2uXhfH(lsQQqQ92pvDobxBC_oc^3M,0EzuO2wGk9fzhO0aWpkzSA7WXf2kDKafLpevawhfxJa09=#OJmlCNJE9Fa107A@g1s", 
     "mongo_settings_host": "mongodb",
     "mongo_settings": "mongodb://changeme_9620eh26sfvka017fx:changeme_0cx821ncf7qg17ahx3@mongodb:27017/?authSource=admin",
-    "redis_settings": "redis://:changeme_927dhgs810d712fxs1@redis:6379/0",
+    "redis_settings": "redis://:changeme_927dhgs810d712fxs1@url-sandbox_redis:6379/0",
     "celery_settings": {
-        "celery_broker_url": "redis://:changeme_927dhgs810d712fxs1@redis:6379/0", 
-        "celery_result_backend": "redis://:changeme_927dhgs810d712fxs1@redis:6379/0", 
+        "celery_broker_url": "redis://:changeme_927dhgs810d712fxs1@url-sandbox_redis:6379/0", 
+        "celery_result_backend": "redis://:changeme_927dhgs810d712fxs1@url-sandbox_redis:6379/0", 
         "name": "tasks"
     }, 
     "url_timeout": 10,
