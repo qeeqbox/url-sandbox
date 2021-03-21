@@ -37,6 +37,7 @@ filterwarnings("ignore", category=DeprecationWarning)
 DISPLAY = Display(visible=0, size=(800, 600))
 X509 = None
 
+
 def get_dns(parsed, extracted_table):
     try:
         temp_list = []
@@ -44,14 +45,15 @@ def get_dns(parsed, extracted_table):
             try:
                 answer = resolve(parsed['domain'], records, raise_on_no_answer=False)
                 if answer.rrset is not None:
-                    temp_list.append({records:answer.rrset.to_text()})
-            except:
+                    temp_list.append({records: answer.rrset.to_text()})
+            except BaseException:
                 pass
         if len(temp_list) > 0:
-            extracted_table.insert({'dns_records':temp_list})
+            extracted_table.insert({'dns_records': temp_list})
     except Exception as e:
         print(e)
         print("[SandBox] get_dns failed")
+
 
 def get_words(table, buffer):
     try:
@@ -64,9 +66,9 @@ def get_words(table, buffer):
         text = image_to_string(image, config='--psm 6')
         print(text)
         words_list = findall("[\x20-\x7e]{4,}", text)
-        table.insert({'all_words':words_list})
+        table.insert({'all_words': words_list})
         print("[SandBox] words saved")
-    except:
+    except BaseException:
         print("[SandBox] get_words failed")
 
 
@@ -83,45 +85,46 @@ def make_network(analyzer_table, network_graph):
                     if 'Host' in item['headers']:
                         if item['headers']['Host'] not in list_domain_counters:
                             list_domain_counters.append(item['headers']['Host'])
-                            dict_domain_counters.update({domain_counter:item['headers']['Host']})
+                            dict_domain_counters.update({domain_counter: item['headers']['Host']})
                             domain_counter += 1
                     if ':authority' in item['headers']:
                         if item['headers'][':authority'] not in list_domain_counters:
                             list_domain_counters.append(item['headers'][':authority'])
-                            dict_domain_counters.update({domain_counter:item['headers'][':authority']})
+                            dict_domain_counters.update({domain_counter: item['headers'][':authority']})
                             domain_counter += 1
-            except:
+            except BaseException:
                 pass
 
         G = Graph()
         if len(list_domain_counters) > 0:
             for key, value in dict_domain_counters.items():
-                G.add_node(key,text=value)
+                G.add_node(key, text=value)
                 if key != 0:
                     G.add_edge(0, key)
 
             pos = circular_layout(G)
-            fig = plt.figure(figsize=(10,5),facecolor='w') 
+            fig = plt.figure(figsize=(10, 5), facecolor='w')
             ax = fig.add_subplot(111)
-            plt.xlim(-1.5,1.5)
-            plt.ylim(-1.5,1.5)
+            plt.xlim(-1.5, 1.5)
+            plt.ylim(-1.5, 1.5)
 
             for edges in G.edges:
                 ax.annotate("",
-                            xy=pos[edges[0]],xycoords='data',
-                            xytext=pos[edges[1]],textcoords='data',
-                            arrowprops=dict(arrowstyle='-',color="r",shrinkA=7, shrinkB=7,patchA=None, patchB=None,connectionstyle="arc3,rad=-0.1",),)
+                            xy=pos[edges[0]], xycoords='data',
+                            xytext=pos[edges[1]], textcoords='data',
+                            arrowprops=dict(arrowstyle='-', color="r", shrinkA=7, shrinkB=7, patchA=None, patchB=None, connectionstyle="arc3,rad=-0.1",),)
             for node in G:
-                x,y = pos[node]
-                ax.text(x,y,G.nodes[node]['text'], fontsize=10, bbox=dict(boxstyle='round', facecolor='#D3D3D3', alpha=1, linewidth=0), zorder=99)
+                x, y = pos[node]
+                ax.text(x, y, G.nodes[node]['text'], fontsize=10, bbox=dict(boxstyle='round', facecolor='#D3D3D3', alpha=1, linewidth=0), zorder=99)
             ax.axis('off')
             buf = BytesIO()
-            plt.savefig(buf,bbox_inches='tight',dpi=100)
+            plt.savefig(buf, bbox_inches='tight', dpi=100)
             buf.seek(0)
-            network_graph.insert({'circular_layout':hexlify(buf.read()).decode('utf-8')})
+            network_graph.insert({'circular_layout': hexlify(buf.read()).decode('utf-8')})
             print("[SandBox] saved network graph")
-    except:
+    except BaseException:
         print("[SandBox] make_network failed")
+
 
 def get_headers(parsed, extracted_table):
     try:
@@ -136,16 +139,18 @@ def get_headers(parsed, extracted_table):
             response = rhead(parsed['buffer'], headers=headers, timeout=2)
             response.headers['response_status'] = response.status_code
         if len(response.headers) > 0:
-            extracted_table.insert({'Request_Headers':dict(response.request.headers)})
-            extracted_table.insert({'Response_Headers':dict(response.headers)})
+            extracted_table.insert({'Request_Headers': dict(response.request.headers)})
+            extracted_table.insert({'Response_Headers': dict(response.headers)})
             print("[SandBox] extracted request and response headers")
     except Exception as e:
         print("[SandBox] get_headers failed")
 
+
 def get_cert(parsed, extracted_table):
     try:
-        mapped = {b'CN':b'Common Name', b'OU': b'Organizational Unit', b'O': b'Organization', b'L': b'Locality', b'ST': b'State Or Province Name', b'C': b'Country Name'}
+        mapped = {b'CN': b'Common Name', b'OU': b'Organizational Unit', b'O': b'Organization', b'L': b'Locality', b'ST': b'State Or Province Name', b'C': b'Country Name'}
         original_connect = VerifiedHTTPSConnection.connect
+
         def hooked_connect(self):
             global X509
             original_connect(self)
@@ -162,20 +167,20 @@ def get_cert(parsed, extracted_table):
         List_['Subjects'] = []
         for subject in X509.get_subject().get_components():
             try:
-                List_['Subjects'].append({mapped[subject[0]].decode('utf-8'):subject[1].decode('utf-8')})
-            except:
+                List_['Subjects'].append({mapped[subject[0]].decode('utf-8'): subject[1].decode('utf-8')})
+            except BaseException:
                 pass
         List_['Subject Hash'] = X509.get_subject().hash()
         List_['Issuer'] = []
         for issuer in X509.get_issuer().get_components():
             try:
-                List_['Issuer'].append({mapped[issuer[0]].decode('utf-8'):issuer[1].decode('utf-8')})
-            except:
+                List_['Issuer'].append({mapped[issuer[0]].decode('utf-8'): issuer[1].decode('utf-8')})
+            except BaseException:
                 pass
         List_['Issuer Hash'] = X509.get_issuer().hash()
         List_['Extensions'] = []
         for extension in range(X509.get_extension_count()):
-            List_['Extensions'].append({X509.get_extension(extension).get_short_name().decode('utf-8'):X509.get_extension(extension).__str__()})
+            List_['Extensions'].append({X509.get_extension(extension).get_short_name().decode('utf-8'): X509.get_extension(extension).__str__()})
         List_['Expired'] = X509.has_expired()
         List_['Valid From'] = X509.get_notBefore().decode('utf-8')
         List_['Valid Until'] = X509.get_notAfter().decode('utf-8')
@@ -187,31 +192,32 @@ def get_cert(parsed, extracted_table):
         List_['SHA256 Digest'] = X509.digest('sha256').decode('utf-8')
         List_['SHA384 Digest'] = X509.digest('sha384').decode('utf-8')
         List_['SHA512 Digest'] = X509.digest('sha512').decode('utf-8')
-        extracted_table.insert({'Certificate':List_})
+        extracted_table.insert({'Certificate': List_})
         print("[SandBox] extracted certificate")
-    except:
+    except BaseException:
         print("[SandBox] get_cert failed")
 
-def get_all_links(html,extracted_table):
+
+def get_all_links(html, extracted_table):
     try:
         temp_table = []
         parsed_table = []
         for a_tag in BeautifulSoup(html, 'html.parser').findAll("a"):
             try:
-                temp_link = "{} > {}".format(a_tag['href'],a_tag.text)
+                temp_link = "{} > {}".format(a_tag['href'], a_tag.text)
                 if temp_link not in temp_table:
                     temp_table.append(temp_link)
-                    parsed_table.append({"link":a_tag['href'],"text":a_tag.text})
-            except:
+                    parsed_table.append({"link": a_tag['href'], "text": a_tag.text})
+            except BaseException:
                 pass
         if len(parsed_table) > 0:
-            extracted_table.insert({"extracted_links":parsed_table})
+            extracted_table.insert({"extracted_links": parsed_table})
             print("[SandBox] extracted links")
-    except:
+    except BaseException:
         print("[SandBox] get_all_links failed")
 
 
-def get_all_scripts(html,extracted_table):
+def get_all_scripts(html, extracted_table):
     try:
         temp_table = []
         parsed_table = []
@@ -220,41 +226,44 @@ def get_all_scripts(html,extracted_table):
             if temp_link not in temp_table:
                 temp_table.append(temp_link)
                 try:
-                    parsed_table.append({"script":str(script)})
-                except:
+                    parsed_table.append({"script": str(script)})
+                except BaseException:
                     pass
         if len(parsed_table) > 0:
-            extracted_table.insert({"extracted_scripts":parsed_table})
+            extracted_table.insert({"extracted_scripts": parsed_table})
             print("[SandBox] extracted scripts")
-    except:
+    except BaseException:
         print("[SandBox] get_all_links failed")
 
-def take_normal_screen_shot(driver,screenshot_table, words_table):
+
+def take_normal_screen_shot(driver, screenshot_table, words_table):
     '''
     get normal screenshit
     '''
     try:
         screenshot = driver.get_screenshot_as_png()
-        screenshot_table.insert({'normal_image':hexlify(screenshot).decode('utf-8')})
+        screenshot_table.insert({'normal_image': hexlify(screenshot).decode('utf-8')})
         print("[SandBox] Screenshot saved")
-        #get_words(words_table,screenshot)
-    except:
+        # get_words(words_table,screenshot)
+    except BaseException:
         print("[SandBox] take_normal_screen_shot failed")
 
-def take_full_screen_shot(driver,screenshot_table, words_table):
+
+def take_full_screen_shot(driver, screenshot_table, words_table):
     '''
     this function needs checking
     '''
     try:
         element = driver.find_element_by_tag_name('html')
         screenshot = element.get_screenshot_as_png()
-        screenshot_table.insert({'full_image':hexlify(screenshot).decode('utf-8')})
+        screenshot_table.insert({'full_image': hexlify(screenshot).decode('utf-8')})
         print("[SandBox] Screenshot saved")
-        #get_words(words_table,screenshot)
-    except:
+        # get_words(words_table,screenshot)
+    except BaseException:
         print("[SandBox] take_full_screen_shot failed")
 
-def find_key(key,data):
+
+def find_key(key, data):
     '''
     recursive key checking
     '''
@@ -268,6 +277,7 @@ def find_key(key,data):
         elif isinstance(v, dict):
             return find_key(key, v)
 
+
 def parse_ouput(logs, table):
     try:
         performance_events = [loads(e['message'])['message'] for e in logs]
@@ -275,15 +285,16 @@ def parse_ouput(logs, table):
         #temp_list = [e for e in network_events if find_key("headers",e) is not None]
         temp_list = []
         for _ in network_events:
-            rec = find_key("headers",_)
+            rec = find_key("headers", _)
             if rec:
                 if "Network.responseReceived" in _["method"]:
-                    table.insert({"type":"Recvied","headers":rec})
+                    table.insert({"type": "Recvied", "headers": rec})
                 elif "Network.requestWillBeSent" in _["method"]:
-                    table.insert({"type":"Sent","headers":rec})
+                    table.insert({"type": "Sent", "headers": rec})
         print("[SandBox] parsed output")
-    except:
+    except BaseException:
         print("[SandBox] parse_ouput failed")
+
 
 def chrome_driver(parsed, analyzer_db):
     '''
@@ -295,8 +306,8 @@ def chrome_driver(parsed, analyzer_db):
     screenshot_table = analyzer_db.table('screenshot_table')
     network_table = analyzer_db.table('network_table')
     words_table = analyzer_db.table('words_table')
-    get_dns(parsed,extracted_table)
-    get_headers(parsed,extracted_table)
+    get_dns(parsed, extracted_table)
+    get_headers(parsed, extracted_table)
     chrome_options = ChromeOptions()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
@@ -311,22 +322,22 @@ def chrome_driver(parsed, analyzer_db):
         chromebrowser.implicitly_wait(0.1)
         try:
             chromebrowser.get(parsed["buffer"])
-        except:
+        except BaseException:
             pass
-        #WebDriverWait(chromebrowser,1).until(EC.visibility_of_element_located((By.TAG_NAME,'body'))).send_keys(Keys.ESCAPE)
+        # WebDriverWait(chromebrowser,1).until(EC.visibility_of_element_located((By.TAG_NAME,'body'))).send_keys(Keys.ESCAPE)
     else:
         chromebrowser.implicitly_wait(int(parsed["url_timeout"]))
         try:
             chromebrowser.get(parsed["buffer"])
-        except:
+        except BaseException:
             pass
     performance_logs = chromebrowser.get_log('performance')
-    get_cert(parsed,extracted_table)
-    get_all_links(chromebrowser.page_source,extracted_table)
-    get_all_scripts(chromebrowser.page_source,extracted_table)
+    get_cert(parsed, extracted_table)
+    get_all_links(chromebrowser.page_source, extracted_table)
+    get_all_scripts(chromebrowser.page_source, extracted_table)
     if parsed['take_full_screenshot']:
-        take_full_screen_shot(chromebrowser,screenshot_table, words_table)
-    take_normal_screen_shot(chromebrowser,screenshot_table, words_table)
+        take_full_screen_shot(chromebrowser, screenshot_table, words_table)
+    take_normal_screen_shot(chromebrowser, screenshot_table, words_table)
     parse_ouput(performance_logs, analyzer_table)
     make_network(analyzer_table, network_table)
     chromebrowser.quit()

@@ -12,13 +12,13 @@ from tinydb import TinyDB, Query
 from qbsandbox import chrome_driver
 from qbsniffer import QSniffer
 from qtor import Connection
-from socket import gethostbyname 
+from socket import gethostbyname
 from time import sleep
 
 if len(argv) == 2:
     print("[SandBox] Parsing arguments")
     parsed = loads(unhexlify(argv[1]))
-    analyzer_logs = TinyDB("{}{}{}".format(parsed['locations']['box_output'],parsed['task'],parsed['locations']['analyzer_logs']))
+    analyzer_logs = TinyDB("{}{}{}".format(parsed['locations']['box_output'], parsed['task'], parsed['locations']['analyzer_logs']))
     if not parsed['use_proxy']:
         print("[SandBox] Using tor")
         c = Connection()
@@ -33,8 +33,8 @@ if len(argv) == 2:
             file.write("nameserver {}\n".format(prxoy_dns))
     if parsed['sniffer_on']:
         print("[SandBox] Running Sniffer")
-        sniffer_logs = TinyDB("{}{}{}".format(parsed['locations']['box_output'],parsed['task'],parsed['locations']['sniffer_logs']))
-        x = QSniffer(parsed,'','eth0', sniffer_logs)
+        sniffer_logs = TinyDB("{}{}{}".format(parsed['locations']['box_output'], parsed['task'], parsed['locations']['sniffer_logs']))
+        x = QSniffer(parsed, '', 'eth0', sniffer_logs)
         x.run_sniffer(process=True)
     print("[SandBox] Testing with chrome webdriver")
     chrome_driver(parsed, analyzer_logs)

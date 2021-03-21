@@ -3,20 +3,23 @@
     box -> qtor
 '''
 
-from subprocess import Popen,PIPE,check_output
+from subprocess import Popen, PIPE, check_output
 from shutil import copyfile
 from os import remove
 from time import sleep
 
+
 class Connection():
     def start_supervisord(self):
-        Popen("supervisord >/dev/null 2>&1",shell=True)
+        Popen("supervisord >/dev/null 2>&1", shell=True)
         sleep(3)
+
     def delete_tor_file(self):
         try:
             remove("/etc/tor/qtorrc")
-        except:
+        except BaseException:
             pass
+
     def setuptor_new(self):
         self.delete_tor_file()
         file = 'VirtualAddrNetwork 10.192.0.0/10\nAutomapHostsOnResolve 1\nTransPort 9040\nDNSPort 5353'
@@ -24,8 +27,9 @@ class Connection():
             f.write(file)
             return "Done"
         return "Error"
+
     def setup_iptables(self):
-        file ='''DONOT_TOR="127.0.0.0/9 127.128.0.0/10 127.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
+        file = '''DONOT_TOR="127.0.0.0/9 127.128.0.0/10 127.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
 iptables -F
 iptables -t nat -F
 iptables -t nat -A OUTPUT -m owner --uid-owner $(id -ur debian-tor) -j RETURN
@@ -40,24 +44,27 @@ for NET in $DONOT_TOR; do
 done
 iptables -A OUTPUT -m owner --uid-owner $(id -ur debian-tor) -j ACCEPT
 iptables -A OUTPUT -j REJECT'''
-        process = Popen(file,shell=True)
+        process = Popen(file, shell=True)
         out, err = process.communicate()
         return "Done"
+
     def setup_resolve(self):
         file = '#X#TOR#X#\nnameserver 127.0.0.1\n'
         with open("/etc/resolv.conf", 'w') as f:
             f.write(file)
         return "Done"
+
     def kill_tor(self):
-        process = Popen("supervisorctl stop tor > /dev/null 2>&1",shell=True)
+        process = Popen("supervisorctl stop tor > /dev/null 2>&1", shell=True)
         out, err = process.communicate()
         return "Done"
+
     def start_tor(self):
-        process = Popen("supervisorctl start tor > /dev/null 2>&1",shell=True)
+        process = Popen("supervisorctl start tor > /dev/null 2>&1", shell=True)
         out, err = process.communicate()
         ret = False
         print("[>] Waiting on Tor..")
-        for x in range(0,10):
+        for x in range(0, 10):
             with open('/var/log/tor_s.logs') as file:
                 if 'Bootstrapped 100%: Done' in file.read():
                     ret = True
@@ -67,6 +74,7 @@ iptables -A OUTPUT -j REJECT'''
         if not ret:
             return "Error"
         return "Done"
+
     def run(self):
         print("[>] Setup tor.. 1-6 {}".format(self.kill_tor()))
         print("[>] Setup tor.. 2-6 {}".format(self.delete_tor_file()))
@@ -76,4 +84,4 @@ iptables -A OUTPUT -j REJECT'''
         print("[>] Setup tor.. 6-6 {}".format(self.setup_iptables()))
 
 #c = Connection("xuser","genmon-7","127.0.0.1","9051","pass")
-#c.run()
+# c.run()
