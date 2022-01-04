@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y curl unzip wget jq xvfb firefox-esr tor iptables-persistent iptables net-tools supervisor tcpdump libtesseract-dev libleptonica-dev tesseract-ocr
 COPY box-requirements.txt .
-RUN pip install -r box-requirements.txt
+RUN pip install -r box-requirements.txt --use-deprecated=legacy-resolver
 RUN GECKOVERSION=`curl -sL https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r ".tag_name"` && \
     wget https://github.com/mozilla/geckodriver/releases/download/$GECKOVERSION/geckodriver-$GECKOVERSION-linux64.tar.gz && \
     tar -zxf geckodriver-$GECKOVERSION-linux64.tar.gz -C /usr/local/bin && \
