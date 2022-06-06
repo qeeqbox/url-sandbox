@@ -2,6 +2,7 @@ requests
 flask
 werkzeug
 gunicorn
+pymongo==3.12.1
 flask_mongoengine
 flask_admin
 flask_login

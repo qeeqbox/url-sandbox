@@ -1,5 +1,5 @@
 redis
-pymongo==3.4.0
+pymongo==3.12.1
 termcolor
 psutil
 celery
