@@ -1,22 +1,29 @@
+#!/bin/bash 
+
 echo -e "\nQeeqBox URL-Sandbox v$(jq -r '.version' info) starter script -> https://github.com/qeeqbox/url-sandbox"
 echo -e "Open-Source URL Sandbox\n"
 
+if [[ $EUID -ne 0 ]]; then
+   echo -e "\nYou have to run this script with higher privileges\n" 
+   exit 1
+fi
+
 setup_requirements () {
-	sudo apt update -y
+	apt update -y
 	if ! command -v docker &> /dev/null
 	then
 			echo "Installing Docker"
-			sudo apt install -y linux-headers-$(uname -r) docker.io
+			apt install -y linux-headers-$(uname -r) docker.io
 	fi
 	if ! command -v jq &> /dev/null
 	then
 			echo "Installing jq"
-			sudo apt install -y jq
+			apt install -y jq
 	fi
 	if ! command -v xdg-open &> /dev/null
 	then
 			echo "Installing xdg-utils"
-			sudo apt install -y xdg-open
+			apt install -y xdg-open
 	fi
 	if ! command -v docker-compose &> /dev/null
 	then
@@ -34,11 +41,11 @@ xdg-open http://127.0.0.1:8000/url/
 }
 
 test_project () {
-	sudo docker-compose -f docker-compose-test.yml up --build
+	docker-compose -f docker-compose-test.yml up --build
 }
 
 dev_project () {
-	sudo docker-compose -f docker-compose-dev.yml up --build
+	docker-compose -f docker-compose-dev.yml up --build
 }
 
 stop_containers () {
